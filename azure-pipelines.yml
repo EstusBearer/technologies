@@ -56,9 +56,9 @@ stages:
         docker images --format "{{.Repository}}:{{.Tag}}" | grep 'glad2os/group-project:[0-9]*$' | xargs -r docker rmi -f
         
         echo "Stopping existing container..."
-        docker stop glad2os/group-project || true
-        docker rm glad2os/group-project || true
+        docker stop group-project || true
+        docker rm group-project || true
 
         echo "Running new container..."
-        docker run -d --name glad2os/group-project ghcr.io/glad2os/group-project:latest
+        docker run -d --name group-project ghcr.io/glad2os/group-project:latest
       displayName: 'Clean, Stop and Run Container'

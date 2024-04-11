@@ -1,0 +1,28 @@
+trigger:
+- main
+
+resources:
+- repo: self
+
+pool: Default
+
+stages:
+- stage: Build
+  displayName: Build Stage
+  jobs: 
+  - job: BuildImage
+    displayName: Build Docker Image
+    steps:
+    - task: Docker@2
+      displayName: Build and Push Docker Image
+      inputs:
+        command: buildAndPush
+        containerRegistry: $(dockerRegistryServiceConnection)
+        repository: glad2os/group-project
+        Dockerfile: ./backend/Dockerfile
+        tags: |
+          $(Build.BuildId)
+
+    # This is a placeholder step. Replace or remove it according to your specific unit testing setup
+    - script: echo "Placeholder for unit test step"
+      displayName: Unit Tests

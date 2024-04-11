@@ -62,3 +62,58 @@ stages:
         echo "Running new container..."
         docker run -d --name group-project ghcr.io/glad2os/group-project:latest
       displayName: 'Clean, Stop and Run Container'
+- stage: DeployDev
+  displayName: 'Deploy to Dev Environment'
+  dependsOn: Deliver
+  condition: succeeded('Deliver')
+  jobs:
+  - job: Deploy
+    displayName: 'Deploy App'
+    pool: Default
+    steps:
+    - script: |
+        echo "Mock Deploy to Dev Environment..."
+        # Mock deployment script or command
+      displayName: 'Mock Deployment to Dev'
+
+- stage: DeployQAT
+  displayName: 'Deploy to QAT Environment'
+  dependsOn: DeployDev
+  condition: succeeded('DeployDev')
+  jobs:
+  - job: Deploy
+    displayName: 'Deploy App'
+    pool: Default
+    steps:
+    - script: |
+        echo "Mock Deploy to QAT Environment..."
+        # Mock deployment script or command
+      displayName: 'Mock Deployment to QAT'
+
+- stage: DeployStaging
+  displayName: 'Deploy to Staging Environment'
+  dependsOn: DeployQAT
+  condition: succeeded('DeployQAT')
+  jobs:
+  - job: Deploy
+    displayName: 'Deploy App'
+    pool: Default
+    steps:
+    - script: |
+        echo "Mock Deploy to Staging Environment..."
+        # Mock deployment script or command
+      displayName: 'Mock Deployment to Staging'
+
+- stage: DeployProd
+  displayName: 'Deploy to Production Environment'
+  dependsOn: DeployStaging
+  condition: succeeded('DeployStaging')
+  jobs:
+  - job: Deploy
+    displayName: 'Deploy App'
+    pool: Default
+    steps:
+    - script: |
+        echo "Mock Deploy to Production Environment..."
+        # Mock deployment script or command
+      displayName: 'Mock Deployment to Prod'

@@ -23,6 +23,7 @@ stages:
         Dockerfile: ./backend/Dockerfile
         tags: |
           $(Build.BuildId)
+          latest
 
 
     - script: echo "Placeholder for unit test step"

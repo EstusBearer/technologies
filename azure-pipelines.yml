@@ -49,8 +49,7 @@ stages:
   jobs:
   - job: CleanupAndDeploy
     displayName: 'Cleanup and Deploy'
-    pool:
-      vmImage: 'ubuntu-latest'
+    pool: Default
     steps:
     - script: |
         echo "Removing images with numeric tags..."

@@ -7,15 +7,16 @@ resources:
 pool: Default
 
 stages:
-
 - stage: Build
   displayName: Build Stage
   jobs: 
   - job: BuildImage
     displayName: Build Docker Image
     steps:
+    
+    # Step 1: Docker build
     - task: Docker@2
-      displayName: Build Docker Image
+      displayName: 'Build Docker Image'
       inputs:
         command: build
         containerRegistry: $(dockerRegistryServiceConnection)
@@ -25,6 +26,18 @@ stages:
           $(Build.BuildId)
           latest
 
+    # SonarQube analysis
+    - task: SonarQubePrepare@4
+      inputs:
+        SonarQube: $(SonarQubeServiceConnectionName)
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: $(SonarProjectKey)
+        cliSources: 'backend'
 
-    - script: echo "Placeholder for unit test step"
-      displayName: Unit Tests
+    # Execute SonarQube analysis
+    - task: SonarQubeAnalyze@4
+
+    - task: SonarQubePublish@4
+      inputs:
+        pollingTimeoutSec: '300'

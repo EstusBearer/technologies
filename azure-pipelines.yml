@@ -41,3 +41,25 @@ stages:
     - task: SonarQubePublish@4
       inputs:
         pollingTimeoutSec: '300'
+
+- stage: Deliver
+  displayName: 'Deliver Stage'
+  dependsOn: Build
+  condition: succeeded('Build')
+  jobs:
+  - job: CleanupAndDeploy
+    displayName: 'Cleanup and Deploy'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - script: |
+        echo "Removing images with numeric tags..."
+        docker images --format "{{.Repository}}:{{.Tag}}" | grep 'glad2os/group-project:[0-9]*$' | xargs -r docker rmi -f
+        
+        echo "Stopping existing container..."
+        docker stop glad2os/group-project || true
+        docker rm glad2os/group-project || true
+
+        echo "Running new container..."
+        docker run -d --name glad2os/group-project ghcr.io/glad2os/group-project:latest
+      displayName: 'Clean, Stop and Run Container'
